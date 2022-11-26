@@ -1,20 +1,23 @@
 <script lang="ts">
   import { Component, Prop, Vue } from 'vue-property-decorator'
   import { CompletedFeatureType } from '@/types/completeCharacterTypes'
-  import { FeatureType, FightingStyleType, PowerType } from '@/types/characterTypes'
+  import { FeatureType, FightingStrategyType, FightingStyleType, PowerType } from '@/types/characterTypes'
   import VueMarkdown from 'vue-markdown'
   import CheckList from '@/components/CheckList.vue'
   import ConfirmDelete from '@/components/ConfirmDelete.vue'
   import { namespace } from 'vuex-class'
   import CharacterSheetChooseFightingStyle from './CharacterSheetChooseFightingStyle.vue'
+  import FightingStrategySelectionDialog from '@/components/FightingStrategySelectionDialog.vue'
 
   const fightingStyleModule = namespace('fightingStyles')
+  const fightingStrategiesModule = namespace('fightingStrategies')
 
   @Component({
     components: {
       CheckList,
       VueMarkdown,
       ConfirmDelete,
+      FightingStrategySelectionDialog,
       CharacterSheetChooseFightingStyle
     }
   })
@@ -25,6 +28,8 @@
 
     @fightingStyleModule.State fightingStyles!: FightingStyleType[]
     @fightingStyleModule.Action fetchFightingStyles!: () => void
+    @fightingStrategiesModule.State fightingStrategies!: FightingStrategyType[]
+    @fightingStrategiesModule.Action fetchFightingStrategies!: () => void
 
     created () {
       this.fetchFightingStyles()
@@ -32,6 +37,14 @@
 
     getFightingStyle (key: string) {
       var fs = this.fightingStyles.find(f => (f as any).rowKey === key)
+      if (fs) {
+        return fs
+      }
+      return undefined
+    }
+
+    getFightingStrategy (key: string) {
+      var fs = this.fightingStrategies.find(f => (f as any).rowKey === key)
       if (fs) {
         return fs
       }
@@ -68,6 +81,8 @@
         div(v-if="feature.prerequisite") #[strong Prerequisite:] {{ feature.prerequisite }}
         br(v-if="feature.castingPeriodText || feature.range || feature.duration")
         VueMarkdown {{ feature.description || feature.text }}
+
+        // Fighting Styles
         div(v-if="feature.metadata && feature.metadata.fightingStyles")
           p(v-if="feature.config && feature.config.data")
             strong
@@ -81,6 +96,21 @@
             :item="feature.name",
             @delete="$emit('deleteFeature', feature)"
           )
+        // Fighting Strategies
+        div(v-if="feature.metadata && feature.metadata.fightingStrategies")
+          p(v-if="feature.config && feature.config.data")
+            strong
+              u Chosen Strategy
+            strong : {{ getFightingStrategy(feature.config.data).name }}
+            VueMarkdown(:source="getFightingStrategy(feature.config.data).description || getFightingStrategy(feature.config.data).text")
+          FightingStrategySelectionDialog(:feature="feature", @saveFeatureConfig="(fc) => $emit('saveFeatureConfig', fc)")
+        div(v-if="feature.customIndex > -1").d-flex.justify-end
+          ConfirmDelete(
+            label="Feature",
+            :item="feature.name",
+            @delete="$emit('deleteFeature', feature)"
+          )
+
         // pre {{ JSON.stringify(feature, null, 4) }}
 </template>
 

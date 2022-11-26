@@ -10,6 +10,9 @@ export var FEATURES_WITH_FIGHTING_STYLES = [
   'Class-Scout-Fighting Style-2',
   'Fighting Stylist'
 ]
+export var FEATURES_WITH_FIGHTING_STRATEGIES = [
+  'Class-Fighter-Fighter Strategies-3'
+]
 
 function calculateUsage (
   rawCharacter: RawCharacterType,
@@ -102,6 +105,9 @@ export default function generateFeatures (
 
     if (FEATURES_WITH_FIGHTING_STYLES.indexOf(feat.rowKey) > -1) {
       feat.metadata.fightingStyles = { number: 1 }
+    }
+    if (FEATURES_WITH_FIGHTING_STRATEGIES.indexOf(feat.rowKey) > -1) {
+      feat.metadata.fightingStrategies = { number: 1 }
     }
   }
   // If any remaining feature configs are still present then they likely need to be trimmed

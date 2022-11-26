@@ -105,6 +105,9 @@ export interface CompletedFeatureType {
   metadata?: {
     fightingStyles?: {
       number: number
+    },
+    fightingStrategies?: {
+      number: number
     }
   }
   source?: string,

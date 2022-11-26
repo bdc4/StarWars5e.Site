@@ -162,6 +162,14 @@ export interface FightingMasteryType {
   contentType: string
 }
 
+export interface FightingStrategyType {
+  name: string,
+  text: string,
+  contentSource: string,
+  contentType: string,
+  rowKey: string
+}
+
 export interface FightingStyleType {
   name: string,
   description: string,
