@@ -79,13 +79,13 @@
     h3 {{ castingType }} Powers
     div {{ powersSelected.length }} / {{ numberPowersKnown }} Known
     CharacterSheetExpansionFeatures(:features="powersSelectedData",
-      @saveFeatureConfig="(fc) => $emit('saveFeatureConfig', fc)",
+      @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)",
       isShowingLevel, :class="$style.powersList").text-left
     CharacterSheetCastingAddPower(
       :disabled="this.powersSelected.length >= this.numberPowersKnown",
       v-bind="{ castingType, maxPowerLevel, powersSelected, allForcePowers }",
       :isEnforcingForcePrerequisites="settings.isEnforcingForcePrerequisites",
-      @saveFeatureConfig="(fc) => $emit('saveFeatureConfig', fc)",
+      @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)",
       @updatePowers="handleUpdatePowers"
     )
 </template>

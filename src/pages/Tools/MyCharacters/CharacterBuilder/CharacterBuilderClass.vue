@@ -15,8 +15,8 @@
   import CharactersArchetypeDetail from '@/pages/Characters/CharactersArchetypeDetail.vue'
   import CharacterSheetExpansionFeatures from '../CharacterSheet/CharacterSheetExpansionFeatures.vue'
   import MyDialog from '@/components/MyDialog.vue'
-  import { mapFeatureConfigs } from '@/modules/CharacterEngine/generateFeatures'
   import { CompletedFeatureType } from '@/types/completeCharacterTypes'
+  import { mapChoiceConfigs } from '@/modules/CharacterEngine/generateCharacter'
 
   const archetypesModule = namespace('archetypes')
 
@@ -93,7 +93,7 @@
     }
 
     get classFeatures () {
-      var tempFeatureConfigs = JSON.parse(JSON.stringify(this.character.featureConfigs))
+      var tempChoiceConfigs = JSON.parse(JSON.stringify(this.character.choiceConfigs))
       var features = chain(this.features.map(f => f))
         .filter(({ sourceName, level }) => this.classData
           ? this.classData.name === sourceName && level !== undefined && level <= this.myClass.levels
@@ -104,12 +104,12 @@
         .uniqBy(({ name, sourceName }) => name + sourceName)
         .reverse()
         .value()
-      features.forEach(f => mapFeatureConfigs(f, tempFeatureConfigs))
+      features.forEach(f => mapChoiceConfigs(f, 'FeatureType', tempChoiceConfigs))
       return features
     }
 
     get archetypeFeatures () {
-      var tempFeatureConfigs = JSON.parse(JSON.stringify(this.character.featureConfigs))
+      var tempChoiceConfigs = JSON.parse(JSON.stringify(this.character.choiceConfigs))
       var features = chain(this.features.map(f => f))
         .filter(({ sourceName, level }) => this.archetypeData
           ? this.archetypeData.name === sourceName && level !== undefined && level <= this.myClass.levels
@@ -120,7 +120,7 @@
         .uniqBy(({ name, sourceName }) => name + sourceName)
         .reverse()
         .value()
-      features.forEach(f => mapFeatureConfigs(f, tempFeatureConfigs))
+      features.forEach(f => mapChoiceConfigs(f, 'FeatureType', tempChoiceConfigs))
       return features
     }
 
@@ -243,9 +243,9 @@
       @change="handleUpdateArchetype"
     )
     h3 Class Features
-    CharacterSheetExpansionFeatures(:features="classFeatures", @saveFeatureConfig="(fc) => $emit('saveFeatureConfig', fc)")
+    CharacterSheetExpansionFeatures(:features="classFeatures", @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)")
     h3(v-if="archetypeFeatures.length > 0").mt-3 Archetype Features
-    CharacterSheetExpansionFeatures(:features="archetypeFeatures", @saveFeatureConfig="(fc) => $emit('saveFeatureConfig', fc)")
+    CharacterSheetExpansionFeatures(:features="archetypeFeatures", @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)")
     h3(v-if="asiLevels.length > 0").mt-3 Ability Score Improvements
     CharacterBuilderClassASI(
       v-for="(asiLevel, index) in asiLevels",
@@ -256,7 +256,7 @@
     CharacterBuilderClassPowers(
       v-bind="{ myClass, classData, archetypeData, allForcePowers }",
       :settings="character.settings",
-      @saveFeatureConfig="(fc) => $emit('saveFeatureConfig', fc)",
+      @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)",
       @updatePowers="({ newPowers, type, isArchetype }) => handleUpdatePowers(newPowers, type, isArchetype)"
     )
     CharacterBuilderClassManeuvers(

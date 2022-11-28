@@ -58,7 +58,7 @@
         CharacterSheetSection(
           v-bind="{ completeCharacter }",
           :currentTab="openTabs[section]",
-          @saveFeatureConfig="(fc) => $emit('saveFeatureConfig', fc)",
+          @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)",
           @goToStep="step => $emit('goToStep', step)"
           @updateCharacter="newCharacter => $emit('updateCharacter', newCharacter)",
           @deleteCharacterProperty="payload => $emit('deleteCharacterProperty', payload)",

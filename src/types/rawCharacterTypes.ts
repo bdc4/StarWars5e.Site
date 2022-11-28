@@ -75,10 +75,12 @@ export interface RawCharacteristicsType {
   Backstory: string
 }
 
-export interface FeatureConfigType {
-  localId: string
+export interface ChoiceConfigType {
+  hash?: string
+  localId?: string
   configType: string,
-  featureRowKey: string,
+  referenceRowKey: string,
+  referenceType: string,
   data: any
 }
 
@@ -247,7 +249,7 @@ export interface RawCharacterType {
     exhaustion: number,
     highLevelCasting: HighLevelCastingType
   },
-  featureConfigs: FeatureConfigType[],
+  choiceConfigs: ChoiceConfigType[],
   tweaks: TweaksType,
   customLanguages: string[],
   customProficiencies: CustomProficiencyType[],

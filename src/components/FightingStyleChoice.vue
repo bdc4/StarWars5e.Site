@@ -25,9 +25,9 @@
       VueMarkdown
     }
   })
-  export default class CharacterSheetChooseFightingStyle extends Vue {
-    @Prop(Object) readonly feature: CompletedFeatureType
-    @Prop(Boolean) readonly hidden: boolean
+  export default class FightingStyleChoice extends Vue {
+    @Prop(Object) readonly source: CompletedFeatureType
+    @Prop(String) readonly sourceType: string
 
     @fightingStylesModule.State fightingStyles!: FightingStyleType[]
     @fightingStylesModule.Action fetchFightingStyles!: () => void
@@ -39,22 +39,30 @@
       this.fightingStyleOptions = this.fightingStyles.map(fs => ({
         ...fs,
         rowKey: (fs as any).rowKey,
-        selected: this.feature.config && this.feature.config.data === (fs as any).rowKey
+        selected: this.source.config && this.source.config.data === (fs as any).rowKey
       } as FightingStyleOption))
     }
 
     isOpen = false
 
+    getFightingStyle (key: string | {rowKey: string}) {
+      var fs = this.fightingStyles
+        .find(f => (f as any).rowKey === (typeof (key) === 'string' ? key : key.rowKey))
+      if (fs) {
+        return fs
+      }
+      return undefined
+    }
+
     select (fs: any) {
       this.isOpen = false
-      setTimeout(() => {
-      this.$emit('saveFeatureConfig', {
-          data: fs.rowKey,
-          featureRowKey: (this.feature as any).rowKey,
+      this.$emit('saveChoiceConfig', {
+          data: fs,
+          referenceRowKey: (this.source as any).rowKey,
+          referenceType: this.sourceType,
           configType: 'FightingStyleType',
-          localId: this.feature.config && this.feature.config.localId ? this.feature.config.localId : undefined
+          localId: this.source.config && this.source.config.localId ? this.source.config.localId : undefined
         })
-      }, 500)
     }
 
     finish () {
@@ -68,9 +76,11 @@
   MyDialog(v-model="isOpen", wide)
     template(v-slot:activator="{ on }")
       div
-        v-btn(v-if="!feature.config || !feature.config.data", color="primary", v-on="on").mt-3 Choose Fighting Style
-      div
-        a(v-if="feature.config && feature.config.data", v-on="on").mt-3 Change Fighting Style
+        v-btn(v-if="!source.config || !source.config.data", color="primary", v-on="on").mt-3 Choose Fighting Style
+      div(v-if="source.config && source.config.data")
+        h4 {{ getFightingStyle(source.config.data).name }}
+        VueMarkdown(:source="getFightingStyle(source.config.data).description")
+        a(v-if="source.config && source.config.data", v-on="on").mt-3.mb-5 Change Fighting Style
     template(#title) Choose Fighting Style
     template(#text)
       v-expansion-panels(accordion, multiple).mt-5

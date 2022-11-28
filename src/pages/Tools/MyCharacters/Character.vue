@@ -12,8 +12,9 @@
   import { ClassType, ArchetypeType, PowerType, FeatType, BackgroundType, SpeciesType, FeatureType } from '@/types/characterTypes'
   import { EquipmentType } from '@/types/lootTypes'
   import { CompleteCharacterType, CompletedFeatureType } from '@/types/completeCharacterTypes'
-  import { FeatureConfigType, RawCharacterType } from '@/types/rawCharacterTypes'
+  import { ChoiceConfigType, RawCharacterType } from '@/types/rawCharacterTypes'
   import { CharacterValidationType } from '@/types/utilityTypes'
+  import generateID from '@/utilities/generateID'
 
   const characterModule = namespace('character')
   const classesModule = namespace('classes')
@@ -165,25 +166,26 @@
       this.replaceCharacterProperty({ path, property })
     }
 
-    handleSaveFeatureConfig (featureConfig: FeatureConfigType) {
-      if (this.character && featureConfig) {
-        var existingConfigIx = this.character.featureConfigs.findIndex(fc => fc.localId === featureConfig.localId)
+    handleSaveChoiceConfig (choiceConfig: ChoiceConfigType) {
+      if (this.character && choiceConfig) {
+        choiceConfig.hash = generateID()
+        var existingConfigIx = this.character.choiceConfigs.findIndex(fc => fc.localId === choiceConfig.localId)
         if (existingConfigIx > -1) {
           this.replaceCharacterProperty({
-            path: `featureConfigs.${existingConfigIx}`,
-            property: featureConfig
+            path: `choiceConfigs.${existingConfigIx}`,
+            property: choiceConfig
           })
         } else {
-          featureConfig.localId = uniqueId()
+          choiceConfig.localId = uniqueId()
           this.replaceCharacterProperty({
-            path: `featureConfigs`,
+            path: `choiceConfigs`,
             property: [
-              ...[featureConfig],
-              ...this.character && this.character.featureConfigs ? this.character.featureConfigs : []
+              ...[choiceConfig],
+              ...this.character && this.character.choiceConfigs ? this.character.choiceConfigs : []
             ]
           })
         }
-        console.log('Event: saveFeatureConfig', featureConfig)
+        console.log('Event: saveChoiceConfig', choiceConfig)
       }
     }
 
@@ -210,7 +212,7 @@
       v-if="isEditing",
       v-bind="{ character, completeCharacter, characterValidation, currentStep, classes, archetypes, equipment, powers, feats, features, backgrounds, species, isDirty }",
       v-on="{ updateCharacter, deleteCharacterProperty, replaceCharacterProperty, replaceCharacterProperties, goToStep }",
-      @saveFeatureConfig="handleSaveFeatureConfig",
+      @saveChoiceConfig="handleSaveChoiceConfig",
       @deleteCharacter="handleDeleteCharacter",
       @saveCharacter="handleSaveCharacter",
       @viewSheet="goToSheet",
@@ -223,7 +225,7 @@
       v-on="{ updateCharacter, deleteCharacterProperty, replaceCharacterProperty, replaceCharacterProperties, goToStep }",
       @deleteCharacter="handleDeleteCharacter",
       @setClean="isDirty=false",
-      @saveFeatureConfig="handleSaveFeatureConfig"
+      @saveChoiceConfig="handleSaveChoiceConfig"
     )
   Loading(v-else)
 </template>

@@ -1,6 +1,6 @@
-import { RawCharacterType } from '@/types/rawCharacterTypes'
-import { compact, chain } from 'lodash'
-import { ClassType, PowerType, FeatType, BackgroundType, SpeciesType, ArchetypeType, ManeuverType, FeatureType } from '@/types/characterTypes'
+import { ChoiceConfigType, RawCharacterType } from '@/types/rawCharacterTypes'
+import { compact, chain, uniqueId } from 'lodash'
+import { ClassType, PowerType, FeatType, BackgroundType, SpeciesType, ArchetypeType, ManeuverType, FeatureType, FightingStrategyType } from '@/types/characterTypes'
 import { EquipmentType, EnhancedItemType } from '@/types/lootTypes'
 import generateAbilityScores from './generateAbilityScores'
 import generateCombatStats from './generateCombatStats'
@@ -17,8 +17,30 @@ import generateWeapons from './generateWeapons'
 import applyTweak from '@/utilities/applyTweak'
 import { CharacterAdvancementType, SkillType, ConditionType } from '@/types/lookupTypes'
 import generateExperiencePoints from './generateExperiencePoints'
-import { CompleteCharacterType } from '@/types/completeCharacterTypes'
+import { CompleteCharacterType, CompletedFeatureType, CompletedFightingStrategyType } from '@/types/completeCharacterTypes'
 import generateAttunement from './generateAttunement'
+import FightingStrategies from '../fightingStrategies'
+
+// Combines rawCharacter.ChoiceConfig with real feature data for easy consumption. When a ChoiceConfig is matched it is removed from the pool
+export function mapChoiceConfigs (
+  source: CompletedFeatureType | FeatureType | CompletedFightingStrategyType,
+  sourceType: string,
+  remainingChoiceConfigs: ChoiceConfigType[]) {
+  if (remainingChoiceConfigs.length > 0) {
+    // if there are any remaining feature configs then lets try to map it
+    let configIx = remainingChoiceConfigs
+      .filter(c => c.referenceType === sourceType)
+      .findIndex(f => f.referenceRowKey === (source as any).rowKey)
+    if (configIx > -1) {
+      // found a matching source(feature) config - we will assign it a tempId so we can reference the specific record
+      source.config = remainingChoiceConfigs[configIx]
+      remainingChoiceConfigs.splice(configIx, 1)
+    } else {
+      delete source.config
+    }
+  }
+  return remainingChoiceConfigs
+}
 
 export default function generateCharacter (
   rawCharacter: RawCharacterType,
@@ -34,7 +56,8 @@ export default function generateCharacter (
   backgrounds: BackgroundType[],
   characterAdvancements: CharacterAdvancementType[],
   skills: SkillType[],
-  conditions: ConditionType[]
+  conditions: ConditionType[],
+  fightingStrategies: FightingStrategyType[]
 ): CompleteCharacterType {
   // To Do
   const classText = rawCharacter.classes
@@ -82,8 +105,27 @@ export default function generateCharacter (
     backgrounds,
     abilityScores
   )
+  // Any existing raw feature configs will be tagged with localIds when loaded up, this is used to tie back the relationship
+  // useful in scenarios where Features are not unique (like Feats taken more than once)
+  rawCharacter.choiceConfigs = rawCharacter.choiceConfigs || []
+  for (var fc of rawCharacter.choiceConfigs) {
+    if (!fc.localId) {
+      fc.localId = uniqueId()
+    }
+  }
 
-  return {
+  let remainingChoiceConfigs: ChoiceConfigType[] = JSON.parse(JSON.stringify(rawCharacter.choiceConfigs))
+  for (var feat of [...myFeatures.combatFeatures, ...myFeatures.nonCombatFeatures]) {
+    remainingChoiceConfigs = mapChoiceConfigs(feat, 'FeatureType', remainingChoiceConfigs)
+  }
+  for (var fs of fightingStrategies) {
+    remainingChoiceConfigs = mapChoiceConfigs(fs, 'FightingStrategyType', remainingChoiceConfigs)
+  }
+
+  // If any remaining feature configs are still present then they likely need to be trimmed
+  rawCharacter.choiceConfigs = rawCharacter.choiceConfigs.filter(fc => remainingChoiceConfigs.findIndex(o => o.localId === fc.localId) === -1)
+
+  var completed = {
     name: rawCharacter.name,
     builderVersion: rawCharacter.builderVersion,
     image: rawCharacter.image,
@@ -122,4 +164,6 @@ export default function generateCharacter (
     settings: rawCharacter.settings,
     notes: rawCharacter.notes
   }
+
+  return completed
 }

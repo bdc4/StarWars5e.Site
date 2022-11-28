@@ -110,7 +110,8 @@ export default class Character extends VuexModule {
             rootState.backgrounds.backgrounds,
             rootState.characterAdvancements.characterAdvancements,
             rootState.skills.skills,
-            rootState.conditions.conditions
+            rootState.conditions.conditions,
+            rootState.fightingStrategies.fightingStrategies
           )
         } catch (e) {
           console.error('Character Generation failed. Character built with builder version ' + rawCharacter.builderVersion)

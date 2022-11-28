@@ -100,7 +100,7 @@
         icon,
         castingType="Tech",
         :powersSelected="customTechPowers",
-        @saveFeatureConfig="(fc) => $emit('saveFeatureConfig', fc)",
+        @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)",
         @updatePowers="newPowers => $emit('replaceCharacterProperty', { path: 'customTechPowers', property: newPowers })"
       )
     div(v-if="techCasting").mb-3
@@ -160,7 +160,7 @@
             @click.stop="castTechPower(level)"
           ).ma-1 Cast
             span(v-if="level > 5").ml-1 (1/LR)
-        CharacterSheetExpansionFeatures(:features="powers", @saveFeatureConfig="(fc) => $emit('saveFeatureConfig', fc)")
+        CharacterSheetExpansionFeatures(:features="powers", @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)")
       div(v-if="techCasting.powersKnown.length <= 0").mt-5
         div Click Menu then Edit Character above to choose tech powers
     div.d-flex.justify-space-between.align-center
@@ -171,7 +171,7 @@
         :isEnforcingForcePrerequisites="settings.isEnforcingForcePrerequisites",
         :powersSelected="customForcePowers",
         v-bind="{ allForcePowers }",
-        @saveFeatureConfig="(fc) => $emit('saveFeatureConfig', fc)",
+        @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)",
         @updatePowers="newPowers => $emit('replaceCharacterProperty', { path: 'customForcePowers', property: newPowers })"
       )
     div(v-if="forceCasting")
@@ -306,7 +306,7 @@
             @click.stop="castForcePower(level)"
           ).ma-1 Cast
             span(v-if="level > 5").ml-1 (1/LR)
-        CharacterSheetExpansionFeatures(:features="powers", @saveFeatureConfig="(fc) => $emit('saveFeatureConfig', fc)")
+        CharacterSheetExpansionFeatures(:features="powers", @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)")
       div(v-if="forceCasting.powersKnown.length <= 0").mt-3
         v-btn(color="primary", @click="$emit('goToStep', 2)") Choose Powers
 </template>

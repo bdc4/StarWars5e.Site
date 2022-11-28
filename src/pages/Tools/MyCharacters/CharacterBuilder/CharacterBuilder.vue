@@ -164,7 +164,7 @@
             component(
               :is="steps[n].component",
               v-bind="steps[n].props",
-              @saveFeatureConfig="fc => $emit('saveFeatureConfig', fc)"
+              @saveChoiceConfig="fc => $emit('saveChoiceConfig', fc)"
               @updateCharacter="newCharacter => $emit('updateCharacter', newCharacter)",
               @deleteCharacterProperty="payload => $emit('deleteCharacterProperty', payload)",
               @replaceCharacterProperty="payload => $emit('replaceCharacterProperty', payload)"
