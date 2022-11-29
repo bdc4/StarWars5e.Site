@@ -22,7 +22,7 @@
 </script>
 
 <template lang="pug">
-div
+div.text-left
   h4(v-if="showName") {{feature.name}}
   div(v-if="feature.forceAlignment") #[strong Alignment:] {{ feature.forceAlignment }}
   div(v-if="feature.type") #[strong Type:] {{ feature.type}}
@@ -31,7 +31,7 @@ div
   div(v-if="feature.duration") #[strong Duration:] {{ feature.duration }} {{ feature.concentration ? '(Concentration)' : ''}}
   div(v-if="feature.prerequisite") #[strong Prerequisite:] {{ feature.prerequisite }}
   br(v-if="feature.castingPeriodText || feature.range || feature.duration")
-  VueMarkdown {{ feature.description || feature.text }}
+  VueMarkdown(:key="feature.description || feature.text") {{ feature.description || feature.text }}
 
   // Fighting Styles
   div(v-if="feature.metadata && feature.metadata.fightingStyle")

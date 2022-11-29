@@ -106,7 +106,7 @@ export interface CompletedFeatureType {
   name: string,
   text: string,
   combat: boolean,
-  metadata?: MetadataType | string
+  metadata?: MetadataType
   source?: string,
   sourceName?: string,
   customIndex?: number,

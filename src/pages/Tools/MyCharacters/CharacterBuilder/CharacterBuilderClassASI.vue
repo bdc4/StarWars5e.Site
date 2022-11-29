@@ -135,7 +135,7 @@
           @input="handleUpdateFeat"
         ).mx-2
     div.mt-3.ml-5
-      div(v-if="!feat") Feat not found
+      // div(v-if="!feat") Feat not found
       FeatureDetail(v-if="feat", :feature="feat", showName=true, @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)")
       // h4 {{asi.name}}
       // VueMarkdown(:source="featText").text-caption

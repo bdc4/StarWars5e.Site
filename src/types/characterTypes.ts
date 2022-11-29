@@ -89,9 +89,9 @@ export interface ClassType {
 }
 
 export interface MetadataType {
-  fightingMasteries?: number,
-  fightingStyles?: number,
-  fightingStrategies?: number
+  fightingMastery?: number,
+  fightingStyle?: number,
+  fightingStrategy?: number
 }
 
 export interface PowerType {

@@ -35,8 +35,10 @@
       this.fetchFightingStyles()
     }
 
-    isChoiceConfigured (f: CompletedFeatureType | PowerType) : boolean {
-      return f && f.config && f.config.data
+    isChoiceNeeded (f: CompletedFeatureType) {
+      return (f.metadata && f.metadata.fightingMastery && !f.config) ||
+        (f.metadata && f.metadata.fightingStrategy && !f.config) ||
+        (f.metadata && f.metadata.fightingStyle && !f.config)
     }
   }
 </script>
@@ -47,7 +49,7 @@
       v-expansion-panel-header.pa-3
         slot(v-bind="{ feature }")
           h4.d-inline {{ feature.name }}
-          span(v-if="feature.metadata && feature.metadata.fightingStyles && !isChoiceConfigured(feature)").op-40.mr-3.text-right Choice Needed
+          span(v-if="isChoiceNeeded(feature)").op-40.mr-3.text-right Choice Needed
       v-expansion-panel-content.ma-2.text-caption
         CheckList(
           v-if="feature.usage",
@@ -59,7 +61,7 @@
 
         div(v-if="isShowingLevel") #[strong Level:] {{ feature.level }}
 
-        FeatureDetail(:feature="feature", @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)")
+        FeatureDetail(:key="feature.hash" :feature="feature", @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)")
 
         div(v-if="feature.customIndex > -1").d-flex.justify-end
           ConfirmDelete(
