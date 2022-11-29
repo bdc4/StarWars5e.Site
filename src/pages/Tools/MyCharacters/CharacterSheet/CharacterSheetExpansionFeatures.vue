@@ -8,6 +8,7 @@
   import { namespace } from 'vuex-class'
   import FightingStrategyChoice from '@/components/FightingStrategyChoice.vue'
   import FightingStyleChoice from '../../../../components/FightingStyleChoice.vue'
+  import FeatureDetail from '@/components/FeatureDetail.vue'
 
   const fightingStyleModule = namespace('fightingStyles')
   const fightingStrategiesModule = namespace('fightingStrategies')
@@ -17,8 +18,7 @@
       CheckList,
       VueMarkdown,
       ConfirmDelete,
-      FightingStrategyChoice,
-      FightingStyleChoice
+      FeatureDetail
     }
   })
   export default class CharacterSheetExpansionFeatures extends Vue {
@@ -56,23 +56,10 @@
           title="Uses",
           @changeSelected="count => $emit('updateCharacter', { currentStats: { featuresTimesUsed: { [feature.name]: count } } })"
         )
+
         div(v-if="isShowingLevel") #[strong Level:] {{ feature.level }}
-        div(v-if="feature.forceAlignment") #[strong Alignment:] {{ feature.forceAlignment }}
-        div(v-if="feature.type") #[strong Type:] {{ feature.type}}
-        div(v-if="feature.castingPeriodText") #[strong Casting Time:] {{ feature.castingPeriodText }}
-        div(v-if="feature.range") #[strong Range:] {{ feature.range }}
-        div(v-if="feature.duration") #[strong Duration:] {{ feature.duration }} {{ feature.concentration ? '(Concentration)' : ''}}
-        div(v-if="feature.prerequisite") #[strong Prerequisite:] {{ feature.prerequisite }}
-        br(v-if="feature.castingPeriodText || feature.range || feature.duration")
-        VueMarkdown {{ feature.description || feature.text }}
 
-        // Fighting Styles
-        div(v-if="feature.metadata && feature.metadata.fightingStyle")
-          FightingStyleChoice(:key="feature.config.hash", :source="feature", sourceType="FeatureType", @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)")
-
-        // Fighting Strategies
-        div(v-if="feature.metadata && feature.metadata.fightingStrategy")
-          FightingStrategyChoice(:key="feature.config.hash", :source="feature", sourceType="FeatureType", @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)")
+        FeatureDetail(:feature="feature", @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)")
 
         div(v-if="feature.customIndex > -1").d-flex.justify-end
           ConfirmDelete(

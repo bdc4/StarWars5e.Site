@@ -115,12 +115,15 @@ export default function generateCharacter (
   }
 
   let remainingChoiceConfigs: ChoiceConfigType[] = JSON.parse(JSON.stringify(rawCharacter.choiceConfigs))
-  for (var feat of [...myFeatures.combatFeatures, ...myFeatures.nonCombatFeatures]) {
-    remainingChoiceConfigs = mapChoiceConfigs(feat, 'FeatureType', remainingChoiceConfigs)
+  for (var feature of [...myFeatures.combatFeatures, ...myFeatures.nonCombatFeatures]) {
+    remainingChoiceConfigs = mapChoiceConfigs(feature, 'FeatureType', remainingChoiceConfigs)
   }
   for (var fs of fightingStrategies) {
     remainingChoiceConfigs = mapChoiceConfigs(fs, 'FightingStrategyType', remainingChoiceConfigs)
   }
+  // for (var feat of myFeats) {
+  //   remainingChoiceConfigs = mapChoiceConfigs(feat, 'FeatType', remainingChoiceConfigs)
+  // }
 
   // If any remaining feature configs are still present then they likely need to be trimmed
   rawCharacter.choiceConfigs = rawCharacter.choiceConfigs.filter(fc => remainingChoiceConfigs.findIndex(o => o.localId === fc.localId) === -1)

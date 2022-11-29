@@ -250,7 +250,8 @@
     CharacterBuilderClassASI(
       v-for="(asiLevel, index) in asiLevels",
       :key="asiLevel",
-      v-bind="{ myClass, index }",
+      v-bind="{ myClass, index, features}",
+      @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)",
       @updateASI="newASI => handleUpdateASI(index, newASI)"
     )
     CharacterBuilderClassPowers(
