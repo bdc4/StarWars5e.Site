@@ -10,6 +10,7 @@
   import { e } from 'mathjs'
   import FightingMasteryChoice from './FightingMasteryChoice.vue'
   import { ChoiceConfigType } from '@/types/rawCharacterTypes'
+  import FightingStyleChoice from './FightingStyleChoice.vue'
 
   const fightingStrategiesModule = namespace('fightingStrategies')
 
@@ -25,7 +26,8 @@
       MyDialog,
       MySelect,
       VueMarkdown,
-      FightingMasteryChoice
+      FightingMasteryChoice,
+      FightingStyleChoice
     }
   })
   export default class FightingStrategyChoice extends Vue {
@@ -38,12 +40,23 @@
     fightingStrategyOptions: FightingStrategyOption[] = []
 
     created () {
-      this.fetchFightingStrategies()
-      this.fightingStrategyOptions = this.fightingStrategies.map(fs => ({
-        ...fs,
-        rowKey: (fs as any).rowKey,
-        selected: this.source.config && this.source.config.data === (fs as any).rowKey
-      } as FightingStrategyOption))
+      this.loadStrategies()
+      setInterval(this.loadStrategies, 500)
+    }
+
+    loadStrategies () {
+      // console.log(`>>Fighting Strategies: ${this.fightingStrategies.length}`)
+      if (!this.fightingStrategies || this.fightingStrategies.length === 0) {
+        console.log(`Fighting Strategies: ${this.fightingStrategies.length}`)
+        this.fetchFightingStrategies()
+      }
+      if (!this.fightingStrategyOptions || this.fightingStrategyOptions.length === 0) {
+        this.fightingStrategyOptions = this.fightingStrategies.map(fs => ({
+          ...fs,
+          rowKey: (fs as any).rowKey,
+          selected: this.source.config && this.source.config.data === (fs as any).rowKey
+        } as FightingStrategyOption))
+      }
     }
 
     isOpen = false
@@ -69,7 +82,7 @@
       return undefined
     }
 
-    handleMasteryChosen (choiceConfig: ChoiceConfigType) {
+    handleNestedUpdate (choiceConfig: ChoiceConfigType) {
       if (this.source.config) {
         this.source.config.data.config = choiceConfig
         this.$emit('saveChoiceConfig', this.source.config)
@@ -95,7 +108,11 @@
         div(v-if="source.config.data && source.config.data.metadata && source.config.data.metadata.fightingMastery")
           hr
           FightingMasteryChoice(:key="source.config.hash", :source="source.config.data", sourceType="FightingStrategyType",
-            @saveChoiceConfig="(fc) => handleMasteryChosen(fc)")
+            @saveChoiceConfig="(fc) => handleNestedUpdate(fc)")
+        div(v-if="source.config.data && source.config.data.metadata && source.config.data.metadata.fightingStyle")
+          hr
+          FightingStyleChoice(:key="source.config.hash", :source="source.config.data", sourceType="FightingStrategyType",
+            @saveChoiceConfig="(fc) => handleNestedUpdate(fc)")
     template(#title) Choose Fighting Strategy
     template(#text)
       v-expansion-panels(accordion, multiple).mt-5

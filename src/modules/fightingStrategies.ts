@@ -17,6 +17,8 @@ export default class FightingStrategies extends VuexModule {
       }
       return feat
     })
+
+    console.log(`Fighting Strat Count ${fightingStrategies.length}`)
     return { fightingStrategies, cachedVersion }
   }
 }

@@ -38,7 +38,8 @@
     isChoiceNeeded (f: CompletedFeatureType) {
       return (f.metadata && f.metadata.fightingMastery && !f.config) ||
         (f.metadata && f.metadata.fightingStrategy && !f.config) ||
-        (f.metadata && f.metadata.fightingStyle && !f.config)
+        (f.metadata && f.metadata.fightingStyle && !f.config) ||
+        (f.metadata && f.metadata.bonusProficiency && !f.config)
     }
   }
 </script>

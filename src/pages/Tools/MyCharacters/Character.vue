@@ -9,7 +9,7 @@
   import builderVersion from '@/version'
   import BackButton from '@/components/BackButton.vue'
 
-  import { ClassType, ArchetypeType, PowerType, FeatType, BackgroundType, SpeciesType, FeatureType } from '@/types/characterTypes'
+  import { ClassType, ArchetypeType, PowerType, FeatType, BackgroundType, SpeciesType, FeatureType, FightingStrategyType } from '@/types/characterTypes'
   import { EquipmentType } from '@/types/lootTypes'
   import { CompleteCharacterType, CompletedFeatureType } from '@/types/completeCharacterTypes'
   import { ChoiceConfigType, RawCharacterType } from '@/types/rawCharacterTypes'
@@ -30,6 +30,7 @@
   const conditionsModule = namespace('conditions')
   const enhancedItemsModule = namespace('enhancedItems')
   const authenticationModule = namespace('authentication')
+  const fightingStrategiesModule = namespace('fightingStrategies')
 
   @Component({
     components: {
@@ -72,6 +73,8 @@
     @skillsModule.Action fetchSkills!: () => void
     @conditionsModule.Action fetchConditions!: () => void
     @enhancedItemsModule.Action fetchEnhancedItems!: () => void
+    @fightingStrategiesModule.State fightingStrategies!: FightingStrategyType[]
+    @fightingStrategiesModule.Action fetchFightingStrategies!: () => void
 
     hasFetchedData = false
     isEditing = true
@@ -89,6 +92,7 @@
         this.fetchBackgrounds(),
         this.fetchSpecies(),
         this.fetchCharacterAdvancements(),
+        this.fetchFightingStrategies(),
         this.fetchSkills(),
         this.fetchConditions(),
         this.fetchEnhancedItems()

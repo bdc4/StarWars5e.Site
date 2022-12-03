@@ -5,7 +5,7 @@
   FeatType
 */
 
-import { ChoiceConfigType } from "./rawCharacterTypes"
+import { ChoiceConfigType, ProficiencyType } from "./rawCharacterTypes"
 
 export interface ArchetypeType {
   className: string,
@@ -91,7 +91,10 @@ export interface ClassType {
 export interface MetadataType {
   fightingMastery?: number,
   fightingStyle?: number,
-  fightingStrategy?: number
+  fightingStrategy?: number,
+  bonusProficiency?: {
+    type: ProficiencyType
+  }
 }
 
 export interface PowerType {

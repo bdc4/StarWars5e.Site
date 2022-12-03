@@ -6,13 +6,15 @@
   import FightingStrategyChoice from './FightingStrategyChoice.vue'
   import VueMarkdown from 'vue-markdown'
   import FightingMasteryChoice from './FightingMasteryChoice.vue'
+  import ProficiencyChoice from './ProficiencyChoice.vue'
 
   @Component({
     components: {
       FightingStrategyChoice,
       FightingStyleChoice,
       FightingMasteryChoice,
-      VueMarkdown
+      VueMarkdown,
+      ProficiencyChoice
     }
   })
   export default class FeatureDetail extends Vue {
@@ -45,5 +47,9 @@ div.text-left
   div(v-if="feature.metadata && feature.metadata.fightingMastery")
     FightingMasteryChoice(:key="feature.config ? feature.config.hash : ''", :source="feature", sourceType="FeatureType", @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)")
 
-  // pre {{JSON.stringify(feature, null, 4)}}
+  // Artisan's Implements
+  div(v-if="feature.metadata && feature.metadata.bonusProficiency")
+    ProficiencyChoice(:proficiencyType="feature.metadata.bonusProficiency.type", :key="feature.config ? feature.config.hash : ''", :source="feature", sourceType="FeatureType", @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)")
+
+  pre {{JSON.stringify(feature, null, 4)}}
 </template>

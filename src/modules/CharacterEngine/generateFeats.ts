@@ -9,8 +9,8 @@ export default function generateFeats (rawCharacter: RawCharacterType, feats: Fe
     for (var asi of myClass.abilityScoreImprovements) {
       if (asi.type === 'Feat') {
         var myFeat = asi as RawFeatType
-        var rawFeat = JSON.parse(JSON.stringify(feats.find(f => f.name === myFeat.name))) as CompletedFeatureType
-
+        var f = feats.find(f => f.name === myFeat.name)
+        var rawFeat = JSON.parse(JSON.stringify(f || {})) as CompletedFeatureType
         rawFeat.metadata = typeof (rawFeat.metadata) === 'string' ? JSON.parse(rawFeat.metadata || '{}') : rawFeat.metadata
         rawFeat.combat = true
         rawFeat.customIndex = -1

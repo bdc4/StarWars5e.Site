@@ -36,11 +36,13 @@
 
     created () {
       this.fetchFightingMasteries()
-      this.fightingMasteryOptions = this.fightingMasteries.map(fs => ({
-        ...fs,
-        rowKey: (fs as any).rowKey,
-        selected: this.source.config && this.source.config.data === (fs as any).rowKey
-      } as FightingMasteryOption))
+      setInterval(() => {
+        this.fightingMasteryOptions = this.fightingMasteries.map(fs => ({
+          ...fs,
+          rowKey: (fs as any).rowKey,
+          selected: this.source.config && this.source.config.data === (fs as any).rowKey
+        } as FightingMasteryOption))
+      }, 100)
     }
 
     isOpen = false
