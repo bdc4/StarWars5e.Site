@@ -34,9 +34,18 @@ export default function generateProficiencies (
     type: 'tool' as ProficiencyType
   }] : []
 
+  // From Choice System
+  var fromChoices = rawCharacter.choiceConfigs
+    .filter(choice => choice.configType === 'ToolsProficienciesType')
+    .map(choice => ({
+      name: choice.data.name,
+      type: 'tool' as ProficiencyType
+    }))
+
   return uniqBy([
     ...(fromStartingClass || []),
     ...fromOtherClasses,
-    ...fromBackground
+    ...fromBackground,
+    ...fromChoices
   ], proficiency => lowerCase(proficiency.name))
 }
