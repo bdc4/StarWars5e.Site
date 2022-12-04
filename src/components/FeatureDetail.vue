@@ -51,5 +51,5 @@ div.text-left
   div(v-if="feature.metadata && feature.metadata.bonusProficiency")
     ProficiencyChoice(:proficiencyType="feature.metadata.bonusProficiency.type", :key="feature.config ? feature.config.hash : ''", :source="feature", sourceType="FeatureType", @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)")
 
-  pre {{JSON.stringify(feature, null, 4)}}
+  // pre {{JSON.stringify(feature, null, 4)}}
 </template>
