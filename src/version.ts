@@ -1,6 +1,10 @@
-export default '0.7.2'
+export default '0.7.4'
 
 /*
+0.7.4
+- Removed Bob's Galactic Strongholds
+- Renamed "Drake's Shipyard" to "SotG Additional Resources"
+
 0.7.3
 - Added exotic weapon filters to the weapons table
 - Fixed incorrect routes to customization options

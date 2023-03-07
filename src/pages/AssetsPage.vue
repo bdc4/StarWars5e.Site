@@ -63,11 +63,7 @@
             },
             {
               href: 'https://www.gmbinder.com/share/-M7y5JXBmMCskhJPFhUp',
-              title: 'Drake\'s Shipyard'
-            },
-            {
-              href: 'https://www.gmbinder.com/share/-MA24CpxiSf9qM8z_TY4',
-              title: 'Bob\'s Galactic Strongholds'
+              title: 'SotG Additional Resources'
             },
             {
               href: 'https://www.gmbinder.com/share/-MDp2nOeGD6JJLxNM_lT',
