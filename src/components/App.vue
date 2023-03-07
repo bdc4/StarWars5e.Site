@@ -30,7 +30,10 @@
     MainToolbar
     FragmentModal(v-if="isDataLoaded")
     v-main(:class="[ $style.content, $style.noPadding, { [$style.darkSide]: isDarkSide } ]")
-      v-alert(v-if="!hasInternet", type="error", :class="$style.alert") Warning: Could not connect to database. Check your internet connection.
+      v-alert(v-if="!hasInternet", type="error", :class="$style.alert").d-print-none Warning: Could not connect to database. Check your internet connection.
+      v-alert(type="warning", :class="$style.alert").d-print-none.px-5
+        div sw5e.com is under new management!
+          a(href='https://www.reddit.com/r/sw5e/comments/ym1kcd/sw5e_website_under_new_management_introducing/').px-1.text-decoration-underline.primary--text.font-weight-bold Click here to read more about Delta Squad.
       v-container(fluid, :class="[$style.noPadding, { [$style.alertMargin]: !hasInternet }]")
         router-view
     router-view(name="navigation")
@@ -49,9 +52,10 @@
     }
 
     .alert {
-      position: fixed;
-      z-index: 5;
+      position: sticky;
+      z-index: 2;
       width: 100%;
+      font-size: 12px;
     }
 
     .alertMargin {
