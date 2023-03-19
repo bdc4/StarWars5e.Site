@@ -30,6 +30,11 @@
 
     async mounted () {
       this.toolbarLoading = false
+      if (this.isAuthLoading) {
+        setTimeout(() => {
+          this.setIsAuthLoading(false)
+        }, 5000)
+      }
     }
 
     @Watch('$route')
