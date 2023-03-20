@@ -1,36 +1,47 @@
 import { RawCharacterType, RawFeatType } from '@/types/rawCharacterTypes'
-import { chain } from 'lodash'
 import { FeatType } from '@/types/characterTypes'
 import { CompletedFeatureType } from '@/types/completeCharacterTypes'
 
-function findFeats (myFeats: string[], feats: FeatType[], isCustom: boolean): (CompletedFeatureType)[] {
-  return chain(myFeats).map((name, index) => {
-    const foundFeat = feats.find(feat => name === feat.name)
-    if (!foundFeat) console.error('Feat not found: ' + name)
-    else {
-      return {
-        ...foundFeat,
-        customIndex: isCustom ? index : -1,
-        combat: true
+export default function generateFeats (rawCharacter: RawCharacterType, feats: FeatType[]): CompletedFeatureType[] {
+  var finalFeats: CompletedFeatureType[] = []
+
+  for (var myClass of rawCharacter.classes) {
+    for (var asi of myClass.abilityScoreImprovements) {
+      if (asi.type === 'Feat') {
+        var myFeat = asi as RawFeatType
+        var f = feats.find(f => f.name === myFeat.name)
+        var rawFeat = JSON.parse(JSON.stringify(f || {})) as CompletedFeatureType
+        rawFeat.metadata = typeof (rawFeat.metadata) === 'string' ? JSON.parse(rawFeat.metadata || '{}') : rawFeat.metadata
+        rawFeat.combat = true
+        rawFeat.customIndex = -1
+        rawFeat.source = 'Feat'
+        rawFeat.sourceName = myClass.name
+
+        finalFeats.push(rawFeat)
       }
     }
-  }).compact().value()
-}
+  }
 
-export default function generateFeats (rawCharacter: RawCharacterType, feats: FeatType[]): CompletedFeatureType[] {
-  const fromClasses = chain(rawCharacter.classes)
-    .map(({ abilityScoreImprovements }) => abilityScoreImprovements)
-    .compact()
-    .flatten()
-    .filter(({ type }) => type === 'Feat')
-    .map(feat => (feat as RawFeatType).name)
-    .value()
-  const myFeatsList = [
-    ...fromClasses,
-    ...(rawCharacter.background.feat && rawCharacter.background.feat.name ? [rawCharacter.background.feat.name] : [])
-  ]
-  return [
-    ...findFeats(myFeatsList, feats, false),
-    ...findFeats(rawCharacter.customFeats || [], feats, true)
-  ]
+  for (var featIx = 0; featIx < rawCharacter.customFeats.length; featIx++) {
+    var feat = rawCharacter.customFeats[featIx]
+    var customFeat = JSON.parse(JSON.stringify(feats.find(f => f.name === feat))) as CompletedFeatureType
+
+    customFeat.metadata = typeof (customFeat.metadata) === 'string' ? JSON.parse(customFeat.metadata || '{}') : customFeat.metadata
+    customFeat.combat = true
+    customFeat.customIndex = featIx
+    customFeat.source = 'Feat'
+    customFeat.sourceName = 'Custom'
+
+    finalFeats.push(customFeat)
+  }
+
+  var bgFeat = JSON.parse(JSON.stringify(rawCharacter.background.feat)) as CompletedFeatureType
+  bgFeat.metadata = typeof (bgFeat.metadata) === 'string' ? JSON.parse(bgFeat.metadata || '{}') : bgFeat.metadata
+  bgFeat.combat = true
+  bgFeat.customIndex = -1
+  bgFeat.source = 'Background'
+  bgFeat.sourceName = rawCharacter.background.name
+  finalFeats.push(bgFeat)
+
+  return finalFeats
 }

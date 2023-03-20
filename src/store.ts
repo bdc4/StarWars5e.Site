@@ -40,6 +40,7 @@ import skills from './modules/skills'
 import authentication from './modules/authentication'
 import localforage from 'localforage'
 import _ from 'lodash'
+import fightingStrategies from './modules/fightingStrategies'
 
 Vue.use(Vuex)
 
@@ -59,6 +60,7 @@ const modules = {
   enhancedItems,
   feats,
   features,
+  fightingStrategies,
   fightingMasteries,
   fightingStyles,
   equipment,

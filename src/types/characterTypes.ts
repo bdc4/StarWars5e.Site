@@ -5,6 +5,8 @@
   FeatType
 */
 
+import { ChoiceConfigType, ProficiencyType } from "./rawCharacterTypes"
+
 export interface ArchetypeType {
   className: string,
   contentSource: string,
@@ -86,6 +88,15 @@ export interface ClassType {
   weaponProficiencies: string[]
 }
 
+export interface MetadataType {
+  fightingMastery?: number,
+  fightingStyle?: number,
+  fightingStrategy?: number,
+  bonusProficiency?: {
+    type: ProficiencyType
+  }
+}
+
 export interface PowerType {
   name: string,
   castingPeriod: string,
@@ -99,7 +110,8 @@ export interface PowerType {
   level: number,
   powerType: string,
   range: string,
-  prerequisite: string
+  prerequisite: string,
+  config: any
 }
 
 export interface ManeuverType {
@@ -147,6 +159,7 @@ export interface FeatType {
   contentSource: string,
   contentType: string,
   name: string,
+  rowKey: string,
   prerequisite: string,
   attributesIncreased: string[]
 }
@@ -158,11 +171,21 @@ export interface FightingMasteryType {
   contentType: string
 }
 
+export interface FightingStrategyType {
+  name: string,
+  text: string,
+  contentSource: string,
+  contentType: string,
+  metadata?: MetadataType | string,
+  rowKey: string
+}
+
 export interface FightingStyleType {
   name: string,
   description: string,
   contentSource: string,
-  contentType: string
+  contentType: string,
+  metadata?: MetadataType | string,
 }
 
 export interface LightsaberFormType {
@@ -178,7 +201,8 @@ export interface FeatureType {
   text: string,
   source: string,
   sourceName: string,
-  metadata: string
+  metadata?: MetadataType | string,
+  config?: ChoiceConfigType
 }
 
 export interface ClassImprovementType {

@@ -8,6 +8,7 @@
   import { chain } from 'lodash'
   import MySelect from '@/components/MySelect.vue'
   import MyDialog from '@/components/MyDialog.vue'
+  import FeatureDetail from '@/components/FeatureDetail.vue'
 
   const featModule = namespace('feats')
 
@@ -16,7 +17,8 @@
       CharactersBackgroundDetail,
       VueMarkdown,
       MySelect,
-      MyDialog
+      MyDialog,
+      FeatureDetail
     }
   })
   export default class CharacterBuilderDescription extends Vue {
@@ -103,6 +105,11 @@
       return featData ? featData.text : ''
     }
 
+    get bgFeature () {
+      const featName = this.currentBackground.feat && this.currentBackground.feat.name
+      return this.feats.find(({ name }) => name === featName)
+    }
+
     handleChangeName (name: string) {
       this.$emit('updateCharacter', { name })
     }
@@ -175,7 +182,7 @@
       label="Choose a feat",
       @change="handleChangeBackgroundFeat"
     )
-    VueMarkdown(:source="featText").text-caption
+    // VueMarkdown(:source="featText").text-caption
     MySelect(
       v-if="currentBackground.name ==='Custom'",
       :value="currentBackground.feature",
@@ -185,6 +192,7 @@
       @change="handleChangeBackgroundFeature"
     )
     div.text-caption {{ featureText }}
+    FeatureDetail(v-if="bgFeature", :feature="bgFeature", showName=true).ml-5
     h3.my-3 Characteristics
     v-text-field(
       v-for="characteristic in characteristicsList",

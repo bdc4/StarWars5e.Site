@@ -8,6 +8,7 @@
   import CharacterBuilderClassHitPoints from './CharacterBuilderClassHitPoints.vue'
   import CharacterBuilderClass from './CharacterBuilderClass.vue'
   import MySelect from '@/components/MySelect.vue'
+  import { CompletedFeatureType } from '@/types/completeCharacterTypes'
 
   const characterAdvancementsModule = namespace('characterAdvancements')
 
@@ -22,7 +23,7 @@
   export default class CharacterBuilderClasses extends Vue {
     @Prop(Object) readonly character!: RawCharacterType
     @Prop(Array) readonly classes!: ClassType[]
-    @Prop(Array) readonly features!: FeatureType[]
+    @Prop(Array) readonly features!: CompletedFeatureType[]
 
     @characterAdvancementsModule.State characterAdvancements!: CharacterAdvancementType[]
     @characterAdvancementsModule.Action fetchCharacterAdvancements!: () => void
@@ -85,6 +86,7 @@
         v-expansion-panel-content
           CharacterBuilderClass(
             v-bind="{ character, myClass, classes, features, index, isFixedHitPoints, characterAdvancements }",
+            @saveChoiceConfig="fc => $emit('saveChoiceConfig', fc)"
             @updateCharacter="newCharacter => $emit('updateCharacter', newCharacter)",
             @replaceCharacterProperty="payload => $emit('replaceCharacterProperty', payload)",
             @replaceCharacterProperties="payload => $emit('replaceCharacterProperties', payload)",

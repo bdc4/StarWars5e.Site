@@ -5,18 +5,22 @@
   import { FeatType } from '@/types/characterTypes'
   import { namespace } from 'vuex-class'
   import MySelect from '@/components/MySelect.vue'
+  import FeatureDetail from '@/components/FeatureDetail.vue'
+  import { CompletedFeatureType } from '@/types/completeCharacterTypes'
 
   const featModule = namespace('feats')
 
   @Component({
     components: {
       VueMarkdown,
-      MySelect
+      MySelect,
+      FeatureDetail
     }
   })
   export default class CharacterBuilderClassASI extends Vue {
     @Prop(Object) readonly myClass!: RawClassType
     @Prop(Number) readonly index!: number
+    @Prop(Array) readonly features!: CompletedFeatureType[]
 
     @featModule.State feats!: FeatType[]
     @featModule.Action fetchFeats!: () => void
@@ -53,6 +57,12 @@
       const asiName = this.asi.name
       const featData = this.feats.find(({ name }) => name === asiName)
       return featData ? featData.text : ''
+    }
+
+    get feat () {
+      if (!this.isFeat(this.asi)) return null
+      const asiName = this.asi.name
+      return this.features.find(f => f.name === asiName && f.source === 'Feat')
     }
 
     isASI (asi: RawFeatType | RawASIType): asi is RawASIType {
@@ -124,5 +134,9 @@
           placeholder="Choose a feat",
           @input="handleUpdateFeat"
         ).mx-2
-    VueMarkdown(:source="featText").text-caption
+    div.mt-3.ml-5
+      // div(v-if="!feat") Feat not found
+      FeatureDetail(v-if="feat", :feature="feat", showName=true, @saveChoiceConfig="(fc) => $emit('saveChoiceConfig', fc)")
+      // h4 {{asi.name}}
+      // VueMarkdown(:source="featText").text-caption
 </template>

@@ -75,6 +75,15 @@ export interface RawCharacteristicsType {
   Backstory: string
 }
 
+export interface ChoiceConfigType {
+  hash?: string
+  localId?: string
+  configType: string,
+  referenceRowKey: string,
+  referenceType: string,
+  data: any
+}
+
 export interface EquipmentTweakType {
   toHit?: TweakType,
   damageDice?: TweakType,
@@ -240,6 +249,7 @@ export interface RawCharacterType {
     exhaustion: number,
     highLevelCasting: HighLevelCastingType
   },
+  choiceConfigs: ChoiceConfigType[],
   tweaks: TweaksType,
   customLanguages: string[],
   customProficiencies: CustomProficiencyType[],

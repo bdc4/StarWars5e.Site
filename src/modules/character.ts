@@ -92,7 +92,8 @@ export default class Character extends VuexModule {
 
   get generateCompleteCharacter () {
     return (rawCharacter: RawCharacterType) => {
-      if (this.getCharacterValidation(rawCharacter).code === 0) {
+      // Disabled validation check here because we're transitioning the CharacterBuilder to require a CompleteCharacter object to work with throughout the CB
+      // if (this.getCharacterValidation(rawCharacter).code === 0) {
         try {
           const rootState = this.context.rootState
           return generateCharacter(
@@ -109,14 +110,15 @@ export default class Character extends VuexModule {
             rootState.backgrounds.backgrounds,
             rootState.characterAdvancements.characterAdvancements,
             rootState.skills.skills,
-            rootState.conditions.conditions
+            rootState.conditions.conditions,
+            rootState.fightingStrategies.fightingStrategies
           )
         } catch (e) {
           console.error('Character Generation failed. Character built with builder version ' + rawCharacter.builderVersion)
           console.error(e)
           return null
         }
-      }
+      // }
     }
   }
 
