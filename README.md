@@ -14,10 +14,16 @@ Set the environment variables:
 
 `VUE_APP_sw5eapiurl` = the URL of the API (http://localhost:44341 for local dev)
 
+### Prerequisites
+- [Yarn](https://yarnpkg.com/getting-started/install)
+  - **NOTE:** If using `corepack enable` to add yarn to your PATH, ensure your terminal is running in administrator mode.
+
 ### Install dependencies
 ```
 yarn
 ```
+
+**NOTE:** If you receive a SecurityError because scripts are disabled on your system, you can run `Set-ExecutionPolicy RemoteSigned` in your terminal to bypass this restriction.
 
 ### Compiles and hot-reloads for development
 ```
