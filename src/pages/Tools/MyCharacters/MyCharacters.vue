@@ -117,6 +117,22 @@
         v-icon fa-plus
       v-btn(color="secondary", fab, @click="isImportOpen=true")
         v-icon fa-download
+
+    div.v-alert.info
+      div.v-alert__wrapper
+        div.v-alert__content 
+          div 
+            p The Character Creator is no longer supported. Any technical issues currently in the application will not be resolved as the current team is not staffed to do so. The SW5e team highly suggests you review the rulebooks carefully, especially the Player's Handbook, before using the creator. This is the only way to recognize where there are technical issues with the creator and resolve them manually.
+
+            p Otherwise, we suggest using another character sheet option:
+            div
+              ul 
+                li Downloadable Character Sheet PDF on the 
+                  a(href='/assets').text-decoration-underline.font-weight-bold SW5e Assets page
+                li Google Sheet made by Raye found in the player-character-help channel of the 
+                  a(href='https://discord.gg/zYcPYTu').text-decoration-underline.font-weight-bold SW5e Discord
+                li Another service such as FoundryVTT or Roll20
+
     h1.mb-5 My Characters
       span(v-if="characters.length > 14").pl-3 ({{characters.length}} / {{characterLimit}})
     div(v-if="!isLoggedIn && characters.length").mb-3 Your characters have not been saved! Click
